@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{FCB9FB18-9A3F-45D0-A4A4-CEFDC61D7073}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>NUnitTestRunner</RootNamespace>
-    <AssemblyName>NUnitTestRunner</AssemblyName>
+    <ProjectGuid>{41C4727D-AC76-4258-BA39-DB3A0DCB28A0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>TestSample</RootNamespace>
+    <AssemblyName>TestSample</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -31,6 +31,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework, Version=3.9.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\packages\NUnit.3.9.0\lib\net45\nunit.framework.dll</HintPath>
@@ -45,9 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestRunner.cs" />
+    <Compile Include="TestAddClass.cs" />
+    <Compile Include="TestMulClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
