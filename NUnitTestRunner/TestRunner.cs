@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using NUnit.Framework;
 
 namespace NUnitTestRunner
@@ -18,35 +17,23 @@ namespace NUnitTestRunner
 
         public void RunTests()
         {
-            var testTypes = GetTestFixtureTypes();
+            var testTypes = GetTestTypes();
 
             foreach (var testType in testTypes)
             {
                 RunTestType(testType);
+                
             }
         }
 
-        private ICollection<Type> GetTestFixtureTypes()
+        ICollection<Type> GetTestTypes()
         {
             return _testAssembly.ExportedTypes
-                .Where(x => x.GetCustomAttributes<TestFixtureAttribute>().Any())
+                .Where(x => x.IsClass && x.GetCustomAttributes<TestFixtureAttribute>().Any())
                 .ToList();
         }
 
-
-        private ICollection<MethodInfo> GetTestMethods(Type testType)
-        {
-            return testType.GetRuntimeMethods()
-                .Where(x => x.GetCustomAttributes<TestAttribute>().Any() || x.GetCustomAttributes<TestCaseAttribute>().Any())
-                .ToList();
-        }
-
-        private ICollection<TestCaseAttribute> GetTestCaseAttributes(MethodInfo testMethod)
-        {
-            return testMethod.GetCustomAttributes<TestCaseAttribute>().ToList();
-        }
-
-        private void RunTestType(Type testType)
+        void RunTestType(Type testType)
         {
             var testMethods = GetTestMethods(testType);
 
@@ -65,13 +52,12 @@ namespace NUnitTestRunner
 
                 foreach (var args in arguments)
                 {
-                    var argsString = args != null ? string.Join(", ", args) : string.Empty;
-                    Console.WriteLine($"Run test method {testType.Name}.{testMethod.Name}({argsString})");
-
                     try
                     {
+                        var argsString = args == null ? string.Empty : string.Join(", ", args);
+                        Console.WriteLine($"Run method {testType.Name}.{testMethod.Name}({argsString})");
                         testMethod.Invoke(instance, args);
-                        Console.WriteLine($"   success!!!");
+                        Console.WriteLine("   success");
                     }
                     catch (TargetInvocationException exception)
                     {
@@ -81,11 +67,24 @@ namespace NUnitTestRunner
                         }
                         else
                         {
-                            Console.WriteLine($"Unexpected exception: {exception.Message}");
+                            Console.WriteLine($"Unexpected: {exception.Message}");
                         }
                     }
                 }
             }
+        }
+
+        ICollection<MethodInfo> GetTestMethods(Type testType)
+        {
+            return testType.GetRuntimeMethods()
+                .Where(x => x.GetCustomAttributes<TestAttribute>().Any() ||
+                            x.GetCustomAttributes<TestCaseAttribute>().Any())
+                .ToList();
+        }
+
+        ICollection<TestCaseAttribute> GetTestCaseAttributes(MethodInfo testMethod)
+        {
+            return testMethod.GetCustomAttributes<TestCaseAttribute>().ToList();
         }
     }
 }
